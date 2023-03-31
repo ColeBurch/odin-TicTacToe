@@ -41,4 +41,48 @@ function cell() {
   };
 }
 
-game = gameBoard();
+function gameController(playerXName = "Player X", playerOName = "Player O") {
+  const board = gameBoard();
+
+  const players = [
+    {
+      name: playerXName,
+      token: "X",
+    },
+    {
+      name: playerOName,
+      token: "O",
+    },
+  ];
+
+  let activePlayer = players[0];
+
+  const switchPlayerTurn = () => {
+    activePlayer = activePlayer === players[0] ? players[1] : players[0];
+  };
+
+  const getActivePlayer = () => activePlayer;
+
+  const printNewRound = () => {
+    board.printBoard();
+    console.log(`${getActivePlayer().name}'s turn.`);
+  };
+
+  const playRound = (position) => {
+    console.log(
+      `Changing position ${position} to ${getActivePlayer().name}'s position`
+    );
+    board.changeValue(position, getActivePlayer().token);
+    switchPlayerTurn();
+    printNewRound();
+  };
+
+  printNewRound();
+
+  return {
+    playRound,
+    getActivePlayer,
+  };
+}
+
+const game = gameController();
