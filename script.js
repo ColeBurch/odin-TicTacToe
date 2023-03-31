@@ -65,7 +65,7 @@ function gameController(playerXName = "Player X", playerOName = "Player O") {
 
   const printNewRound = () => {
     board.printBoard();
-    console.log(`${getActivePlayer().name}'s turn.`);
+    return `${getActivePlayer().name}'s turn.`;
   };
 
   const playRound = (position) => {
@@ -77,12 +77,23 @@ function gameController(playerXName = "Player X", playerOName = "Player O") {
     printNewRound();
   };
 
-  printNewRound();
-
   return {
     playRound,
     getActivePlayer,
+    printNewRound,
   };
 }
 
-const game = gameController();
+function UIController() {
+  const game = gameController();
+  const display = document.querySelector(".display");
+  const blocks = document.querySelectorAll(".block");
+
+  const updateDisplay = () => {
+    display.textContent = game.printNewRound();
+  };
+
+  updateDisplay();
+}
+
+UIController();
