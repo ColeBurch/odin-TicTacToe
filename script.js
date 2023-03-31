@@ -8,8 +8,21 @@ function gameBoard() {
 
   const getBoard = () => board;
 
+  const changeValue = (position, player) => {
+    const selectedPositionValue = board[position].getValue();
+    if (selectedPositionValue != 0) return;
+    board[position].addToken(player);
+  };
+
+  const printBoard = () => {
+    const boardWithCellValues = board.map((cell) => cell.getValue());
+    console.log(boardWithCellValues);
+  };
+
   return {
     getBoard,
+    changeValue,
+    printBoard,
   };
 }
 
