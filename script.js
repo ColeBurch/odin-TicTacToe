@@ -16,7 +16,7 @@ function gameBoard() {
 
   const printBoard = () => {
     const boardWithCellValues = board.map((cell) => cell.getValue());
-    console.log(boardWithCellValues);
+    return boardWithCellValues;
   };
 
   return {
@@ -64,8 +64,9 @@ function gameController(playerXName = "Player X", playerOName = "Player O") {
   const getActivePlayer = () => activePlayer;
 
   const printNewRound = () => {
-    board.printBoard();
-    return `${getActivePlayer().name}'s turn.`;
+    const boardArray = board.printBoard();
+    const displayText = `${getActivePlayer().name}'s turn.`;
+    return { displayText, boardArray };
   };
 
   const playRound = (position) => {
@@ -74,12 +75,10 @@ function gameController(playerXName = "Player X", playerOName = "Player O") {
     );
     board.changeValue(position, getActivePlayer().token);
     switchPlayerTurn();
-    printNewRound();
   };
 
   return {
     playRound,
-    getActivePlayer,
     printNewRound,
   };
 }
@@ -90,10 +89,31 @@ function UIController() {
   const blocks = document.querySelectorAll(".block");
 
   const updateDisplay = () => {
-    display.textContent = game.printNewRound();
+    display.textContent = game.printNewRound().displayText;
+    const boardArray = game.printNewRound().boardArray;
+    blocks.forEach((div) => {
+      let blockId = div.id;
+      div.textContent = boardArray[blockId];
+      if (div.textContent == 0) {
+        div.textContent = "";
+      }
+    });
   };
+
+  blocks.forEach((div) => {
+    div.addEventListener("click", () => {
+      let divId = div.id;
+      game.playRound(divId);
+      updateDisplay();
+    });
+  });
 
   updateDisplay();
 }
 
 UIController();
+
+const reset = document.querySelector(".reset");
+reset.addEventListener("click", () => {
+  UIController();
+});
